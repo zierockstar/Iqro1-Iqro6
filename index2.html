@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iqro Digital - Jilid 2 (Tamat 30 Halaman)</title>
+    <style>
+        body { background-color: #f0f2f5; font-family: Arial, sans-serif; margin: 0; padding: 10px; text-align: center; }
+        .container { max-width: 450px; margin: 0 auto; }
+        .reader-header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 12px; }
+        .title-box h3 { margin: 0; color: #27ae60; }
+        .title-box p { margin: 2px 0 0 0; font-size: 11px; color: #7f8c8d; }
+        .nav-links { display: flex; gap: 4px; }
+        .switch-jilid-btn { background: #27ae60; color: white; border: none; padding: 4px 6px; border-radius: 4px; cursor: pointer; font-size: 9px; font-weight: bold; text-decoration: none; display: inline-block; }
+        .iqro-sheet { background: #fffdf9; border: 2px solid #e0d0c0; border-radius: 10px; padding: 15px; min-height: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-around; gap: 8px; }
+        .row-baca { display: flex; justify-content: space-around; align-items: center; direction: rtl; gap: 6px; }
+        .huruf-item { background: #fdfaf6; border: 1px solid #ebdccc; border-radius: 8px; cursor: pointer; flex: 1; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.2s; }
+        .huruf-item:active { background: #d1f2eb; transform: scale(0.96); }
+        .arabic-text { font-size: 26px; font-weight: bold; color: #2c3e50; line-height: 1.1; }
+        .latin-text { font-size: 11px; color: #16a085; margin-top: 3px; font-weight: bold; }
+        .nav-pagination { display: flex; justify-content: space-between; margin-top: 15px; }
+        .nav-btn { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .nav-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="reader-screen">
+        <div class="reader-header">
+            <div class="title-box">
+                <h3>IQRO JILID 2</h3>
+                <p>Huruf Sambung & Panjang</p>
+            </div>
+            <div>
+                <div class="nav-links">
+                    <a href="index.html" class="switch-jilid-btn" style="background:#e74c3c;">◀ Jilid 1</a>
+                    <a href="index3.html" class="switch-jilid-btn" style="background:#2980b9;">Jilid 3 ▶</a>
+                </div>
+                <div id="page-indicator" style="font-size:11px; font-weight:bold; color:#27ae60; margin-top:3px;">Hal 1 dari 30</div>
+            </div>
+        </div>
+        <div class="iqro-sheet" id="sheet-content"></div>
+        <div class="nav-pagination">
+            <button class="nav-btn" id="prevBtn" onclick="ubahHalaman(-1)">◀ Sebelumnya</button>
+            <button class="nav-btn" id="nextBtn" onclick="ubahHalaman(1)">Selanjutnya ▶</button>
+        </div>
+    </div>
+</div>
+<script>
+    function generateIqro2() {
+        let pages = [];
+        let master = [
+            ["بَا", "baa", "baa"], ["تَا", "taa", "taa"], ["ثَا", "tsaa", "tsaa"], ["جَا", "jaa", "jaa"],
+            ["حَا", "haa", "haa"], ["خَا", "khaa", "khaa"], ["دَا", "daa", "daa"], ["ذَا", "dzaa", "dzaa"],
+            ["رَا", "raa", "raa"], ["زَا", "zaa", "zaa"], ["سَا", "saa", "saa"], ["شَا", "syaa", "syaa"],
+            ["صَا", "shaa", "shaa"], ["ضَا", "dhaa", "dhaa"], ["طَا", "thaa", "thaa"], ["ظَا", "zhaa", "zhaa"],
+            ["عَا", "aa", "aa"], ["غَا", "ghaa", "ghaa"], ["فَا", "faa", "faa"], ["قَا", "qaa", "qaa"],
+            ["كََا", "kaa", "kaa"], ["لَا", "laa", "laa"], ["مَا", "maa", "maa"], ["نَا", "naa", "naa"],
+            ["هَا", "haa", "haa"], ["يَا", "yaa", "yaa"], ["بَتَا", "bataa", "bataa"], ["كَانَ", "kaana", "kaana"],
+            ["تَابَ", "taaba", "taaba"], ["جَاءَ", "jaaa", "ja a"], ["حَادَ", "haada", "haada"], ["خَافَ", "khaafa", "khaafa"],
+            ["دَارَ", "daara", "daara"], ["زَادَ", "zaada", "zaada"], ["سَارَ", "saara", "saara"], ["شَاقَ", "shaaqa", "shaaqa"],
+            ["صَامَ", "saama", "saama"], ["ضَاقَ", "dhaaqa", "dhaaqa"], ["طَالَ", "thaala", "thaala"], ["عَادَ", "aada", "aada"],
+            ["فَازَ", "faaza", "faaza"], ["قَالَ", "qaala", "qaala"], ["كَادَ", "kaada", "kaada"], ["مَالَ", "maala", "maala"],
+            ["نَامَ", "naama", "naama"], ["هَابَ", "haaba", "haaba"], ["يَالَ", "yaala", "yaala"], ["بَنَا", "banaa", "banaa"]
+        ];
+        let idx = 0;
+        for (let h = 1; h <= 30; h++) {
+            let barisHalaman = [];
+            for (let b = 0; b < 4; b++) {
+                let barisItem = [];
+                for (let k = 0; k < 3; k++) {
+                    barisItem.push(master[idx % master.length]);
+                    idx++;
+                }
+                barisHalaman.push(barisItem);
+            }
+            pages.push({ hal: h, baris: barisHalaman });
+        }
+        return pages;
+    }
+    const db2 = generateIqro2();
+    let curIdx = 0;
+    function muatHalaman() {
+        let data = db2[curIdx];
+        document.getElementById("page-indicator").innerText = "Hal " + data.hal + " dari 30";
+        let html = "";
+        data.baris.forEach(row => {
+            html += `<div class="row-baca">`;
+            row.forEach(item => {
+                html += `<div class="huruf-item" data-audio="${item[2]}" onclick="playAudio(this)"><span class="arabic-text">${item[0]}</span><span class="latin-text">${item[1]}</span></div>`;
+            });
+            html += `</div>`;
+        });
+        document.getElementById("sheet-content").innerHTML = html;
+        document.getElementById("prevBtn").disabled = (curIdx === 0);
+        document.getElementById("nextBtn").disabled = (curIdx === db2.length - 1);
+    }
+    function ubahHalaman(dir) {
+        curIdx += dir;
+        if (curIdx < 0) curIdx = 0;
+        if (curIdx >= db2.length) curIdx = db2.length - 1;
+        muatHalaman(); window.scrollTo(0,0);
+    }
+    function playAudio(el) {
+        let txt = el.getAttribute('data-audio');
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let u = new SpeechSynthesisUtterance(txt);
+            u.lang = 'id-ID'; u.rate = 0.8;
+            window.speechSynthesis.speak(u);
+        }
+    }
+    muatHalaman();
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iqro Digital - Jilid 6 Tamat (30 Halaman)</title>
+    <style>
+        body { background-color: #f0f2f5; font-family: Arial, sans-serif; margin: 0; padding: 10px; text-align: center; }
+        .container { max-width: 450px; margin: 0 auto; }
+        .reader-header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 12px; }
+        .title-box h3 { margin: 0; color: #34495e; }
+        .title-box p { margin: 2px 0 0 0; font-size: 11px; color: #7f8c8d; }
+        .switch-jilid-btn { background: #34495e; color: white; border: none; padding: 4px 6px; border-radius: 4px; cursor: pointer; font-size: 9px; font-weight: bold; text-decoration: none; display: inline-block; }
+        .iqro-sheet { background: #fffdf9; border: 2px solid #e0d0c0; border-radius: 10px; padding: 15px; min-height: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-around; gap: 8px; }
+        .row-baca { display: flex; justify-content: space-around; align-items: center; direction: rtl; gap: 6px; }
+        .huruf-item { background: #fdfaf6; border: 1px solid #ebdccc; border-radius: 8px; cursor: pointer; flex: 1; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.2s; }
+        .huruf-item:active { background: #d1f2eb; transform: scale(0.96); }
+        .arabic-text { font-size: 20px; font-weight: bold; color: #2c3e50; line-height: 1.1; }
+        .latin-text { font-size: 10px; color: #16a085; margin-top: 3px; font-weight: bold; }
+        .nav-pagination { display: flex; justify-content: space-between; margin-top: 15px; }
+        .nav-btn { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .nav-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="reader-screen">
+        <div class="reader-header">
+            <div class="title-box">
+                <h3>IQRO JILID 6</h3>
+                <p>Tajwid & Ayat Al-Qur'an (Tamat)</p>
+            </div>
+            <div>
+                <a href="index5.html" class="switch-jilid-btn" style="background:#8e44ad;">◀ Jilid 5</a>
+                <div id="page-indicator" style="font-size:11px; font-weight:bold; color:#34495e; margin-top:3px;">Hal 1 dari 30</div>
+            </div>
+        </div>
+        <div class="iqro-sheet" id="sheet-content"></div>
+        <div class="nav-pagination">
+            <button class="nav-btn" id="prevBtn" onclick="ubahHalaman(-1)">◀ Sebelumnya</button>
+            <button class="nav-btn" id="nextBtn" onclick="ubahHalaman(1)">Selanjutnya ▶</button>
+        </div>
+    </div>
+</div>
+<script>
+    function generateIqro6() {
+        let pages = [];
+        let master = [
+            ["مِنْ شَرِّ", "min syarri", "min syarri"], ["سَمِيعٌ عَلِيمٌ", "sami'un 'aliimun", "samiun alimun"],
+            ["لَمْ يَلِدْ", "lam yalid", "lam yalid"], ["إِذَا جَاءَ", "idzaa jaa'a", "idza ja"],
+            ["فَبِأَيِّ آلَاءِ", "fabi-ayyi alaa'i", "fabi ayyi alai"], ["قُلْ أَعُوذُ", "qul a'udzu", "qul audzu"],
+            ["وَالتِّينِ", "wat tiini", "wat tini"], ["وَالزَّيْتُونِ", "waz zaytuuni", "waz zaituni"],
+            ["لَقَدْ خَلَقْنَا", "laqad khalaqnaa", "laqad khalaqna"], ["فِي أَحْسَنِ", "fii ahsani", "fi ahsani"],
+            ["ثُمَّ رَدَدْنَاهُ", "tsumma radadnaahu", "tsumma radadnahu"], ["أَسْفَلَ سَافِلِينَ", "asfala saafiliina", "asfala safilin"],
+            ["إِلَّا الَّذِينَ", "illalladzina", "illalladzina"], ["آمَنُوا وَعَمِلُوا", "aamanuu wa 'amiluu", "amanu wa amilu"],
+            ["فَلَهُمْ أَجْرُ", "falahum ajru", "falahum ajru"], ["غَيْرُ مَمْنُونٍ", "ghayru mamnuunin", "ghayru mamnunin"],
+            ["فَمَا يُكَذِّبُكَ", "fama yukadzdzibuka", "fama yukadzdzibuka"], ["بَعْدُ بِالدِّينِ", "ba'du biddiini", "ba'du biddini"],
+            ["أَلَيْسَ اللَّهُ", "alaysallahu", "alaysallahu"], ["بِأَحْكَمِ الْحَاكِمِينَ", "bi ahkamil haakimiina", "bi ahkamil hakimin"],
+            ["اقْرَأْ بِاسْمِ", "iqra' bismi", "iqra bismi"], ["خَلَقَ الإِنسَانَ", "khalaqal insana", "khalaqal insana"],
+            ["مِنْ عَلَقٍ", "min 'alaqin", "min alaqin"], ["وَرَبُّكَ الأَكْرَمُ", "wa rabbukal akramu", "wa rabbukal akramu"],
+            ["الَّذِي عَلَّمَ", "alladzii 'allama", "alladzi allama"], ["بِالْقَلَمِ", "bil qalami", "bil qalami"],
+            ["عَلَّمَ الإِنسَانَ", "'allamal insana", "allamal insana"], ["مَا لَمْ يَعْلَمْ", "maa lam ya'lam", "ma lam yalam"],
+            ["كَلَّا إِنَّ الإِنسَانَ", "kallaa innal insana", "kalla innal insana"], ["لَيَطْغَىٰ", "layathghaa", "layathgha"],
+            ["أَن رَّآهُ اسْتَغْنَىٰ", "an raa-ahustaghnaa", "an raahustaghna"], ["إِنَّ إِلَىٰ رَبِّكَ", "inna ilaika rabbika", "inna ilaika rabbika"],
+            ["الرُّجْعَىٰ", "ar-ruj'aa", "ar-rujja"], ["أَرَأَيْتَ الَّذِي", "ara-atal ladzii", "ara-atal ladzi"],
+            ["يَنْهَىٰ", "yanhaa", "yanha"], ["عَبْدًا إِذَا صَلَّىٰ", "'abdan idzaa shallaa", "abdan idza shalla"]
+        ];
+        let idx = 0;
+        for (let h = 1; h <= 30; h++) {
+            let barisHalaman = [];
+            for (let b = 0; b < 4; b++) {
+                let barisItem = [];
+                for (let k = 0; k < 2; k++) {
+                    barisItem.push(master[idx % master.length]);
+                    idx++;
+                }
+                barisHalaman.push(barisItem);
+            }
+            pages.push({ hal: h, baris: barisHalaman });
+        }
+        return pages;
+    }
+    const db6 = generateIqro6();
+    let curIdx = 0;
+    function muatHalaman() {
+        let data = db6[curIdx];
+        document.getElementById("page-indicator").innerText = "Hal " + data.hal + " dari 30";
+        let html = "";
+        data.baris.forEach(row => {
+            html += `<div class="row-baca">`;
+            row.forEach(item => {
+                html += `<div class="huruf-item" data-audio="${item[2]}" onclick="playAudio(this)"><span class="arabic-text">${item[0]}</span><span class="latin-text">${item[1]}</span></div>`;
+            });
+            html += `</div>`;
+        });
+        document.getElementById("sheet-content").innerHTML = html;
+        document.getElementById("prevBtn").disabled = (curIdx === 0);
+        document.getElementById("nextBtn").disabled = (curIdx === db6.length - 1);
+    }
+    function ubahHalaman(dir) {
+        curIdx += dir;
+        if (curIdx < 0) curIdx = 0;
+        if (curIdx >= db6.length) curIdx = db6.length - 1;
+        muatHalaman(); window.scrollTo(0,0);
+    }
+    function playAudio(el) {
+        let txt = el.getAttribute('data-audio');
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let u = new SpeechSynthesisUtterance(txt);
+            u.lang = 'id-ID'; u.rate = 0.8;
+            window.speechSynthesis.speak(u);
+        }
+    }
+    muatHalaman();
+</script>
+</body>
+</html>
